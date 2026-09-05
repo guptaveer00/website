@@ -1,33 +1,39 @@
 /* ===================================================================
-   VEER GUPTA — PORTFOLIO SCRIPT
+   VEER GUPTA — PORTFOLIO SCRIPT (v2 — multi-page rebuild)
    CMU 15-113, Project 1
 
    AI USAGE NOTE (assignment requirement — see prompt-log.txt for the
-   full conversational log):
-   This file was drafted with AI assistance (Claude). Each feature
-   below has its own comment block marking what the AI wrote/proposed
-   and what I reviewed or adjusted. None of this was copy-pasted
-   blind — I read through the logic, renamed things to match my own
-   HTML structure (element ids, classes, section ids), and can explain
-   what each block does line by line.
+   full conversational log): drafted with AI assistance (Claude).
+   Each feature has its own comment marking what the AI wrote/
+   proposed and what I reviewed or changed.
+
+   Why this file changed from v1: the site was restructured from a
+   single scrolling page into five separate pages (index, about,
+   experience, projects, contact) with a fixed top nav instead of a
+   left rail. That made the old scroll-spy feature (which highlighted
+   the current section as you scrolled one long page) meaningless —
+   there's no single page to scroll through anymore. I removed it and
+   replaced it with a mobile hamburger menu, since a fixed top nav
+   actually needs a collapse behavior on small screens that the old
+   left-rail layout didn't.
 
    Features:
-   1. Theme toggle       — terminal <-> "paper" light mode
-   2. Scroll-spy nav     — highlights the current section in the rail
-   3. Stat counters      — animates project metrics counting up from
-                            0 when they scroll into view
+   1. Theme toggle    — terminal <-> "paper" light mode (unchanged)
+   2. Mobile nav menu — hamburger opens/closes the nav links (NEW,
+                         replaces the old scroll-spy)
+   3. Stat counters   — animates project metrics counting up from 0
+                         when they scroll into view (unchanged,
+                         projects.html only)
    =================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
   /* -----------------------------------------------------------------
      1. THEME TOGGLE
-     AI-assisted: the core idea (toggle a class on <body>, let CSS
-     variables handle the actual recoloring) was suggested by the AI
-     during the design-concept pass. I adapted the button label text
-     and the terminal/paper metaphor myself to match the design plan.
-     No localStorage is used — state resets each visit, which is fine
-     for a simple static site and avoids browser-storage complexity.
+     AI-assisted: core approach (toggle a class on <body>, let CSS
+     variables handle recoloring) came from the AI during the design
+     pass; I kept the terminal/paper wording and no-localStorage
+     choice from the original single-page version.
      ----------------------------------------------------------------- */
   const themeToggle = document.getElementById('themeToggle');
 
@@ -40,57 +46,48 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* -----------------------------------------------------------------
-     2. SCROLL-SPY NAVIGATION
-     AI-assisted: I asked the AI for a way to highlight the current
-     section in the left rail as the user scrolls. It suggested
-     IntersectionObserver over a manual scroll-position calculation
-     (better performance, no scroll-event math). I reviewed how the
-     rootMargin values work and adjusted them so a section is marked
-     "active" a bit before it's centered in the viewport, rather than
-     only when fully visible — the -40%/-50% margins trigger that.
+     2. MOBILE NAV TOGGLE
+     AI-assisted: I asked for a standard hamburger-menu pattern for
+     the new fixed top nav. The AI suggested toggling an "open" class
+     on the link list plus aria-expanded on the button for
+     accessibility (screen readers announcing open/closed state) —
+     I kept that rather than a simpler show/hide because it's not
+     much more code and it's the correct accessible pattern. I also
+     added the "close menu after a link is clicked" behavior myself
+     after testing it and noticing the menu stayed open after
+     navigating, which felt broken.
      ----------------------------------------------------------------- */
-  const navLinks = document.querySelectorAll('.nav-link');
-  const sections = document.querySelectorAll('main section[id]');
+  const navToggle = document.getElementById('navToggle');
+  const navLinksList = document.getElementById('navLinksList');
 
-  if (navLinks.length && sections.length) {
-    const navObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const id = entry.target.getAttribute('id');
-        const activeLink = document.querySelector(`.nav-link[data-section="${id}"]`);
-        if (!activeLink) return;
-        navLinks.forEach((link) => link.classList.remove('active'));
-        activeLink.classList.add('active');
+  if (navToggle && navLinksList) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = navLinksList.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    navLinksList.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        navLinksList.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
       });
-    }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
-
-    sections.forEach((section) => navObserver.observe(section));
+    });
   }
 
   /* -----------------------------------------------------------------
-     3. ANIMATED STAT COUNTERS
-     New feature added on request. AI-assisted end to end: I asked for
-     a count-up animation for the project metrics (e.g. "+290% net
-     return") that plays once, when the metric scrolls into view.
-
-     How it works:
-     - Each ".counter" element in the HTML already contains its real,
-       final text (e.g. "+290% net return") so the numbers are still
-       correct if JavaScript fails to load — the animation is a
-       progressive enhancement, not the only source of truth.
-     - data-target / data-prefix / data-suffix / data-comma attributes
-       on each element tell the script the number to count to and how
-       to format it back into text.
-     - requestAnimationFrame + an ease-out curve drives the animation
-       (the AI wrote the easing math — a standard cubic ease-out,
-       1 - (1-t)^3 — which I kept because it's a well-known, readable
-       formula rather than something opaque).
-     - IntersectionObserver fires the animation once per element, the
-       first time it enters the viewport, then stops observing it so
-       it doesn't replay on every scroll up/down.
-     - prefers-reduced-motion is respected: if the user has that
-       preference set, counters just show their final value instantly
-       instead of animating.
+     3. ANIMATED STAT COUNTERS (projects.html)
+     AI-assisted end to end, unchanged from the single-page version.
+     Each ".counter" element already contains its real, final text
+     (e.g. "+290% net return") so the numbers are correct even if
+     JavaScript fails to load — the animation is a progressive
+     enhancement, not the only source of truth. data-target /
+     data-prefix / data-suffix / data-comma attributes tell the
+     script the number to count to and how to format it.
+     requestAnimationFrame + an ease-out cubic curve drives the
+     animation; IntersectionObserver fires it once per element, the
+     first time it scrolls into view, then stops observing so it
+     doesn't replay on scroll up/down. prefers-reduced-motion skips
+     straight to the final value.
      ----------------------------------------------------------------- */
   const counters = document.querySelectorAll('.counter');
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — Veer Gupta</title>
+<meta name="description" content="Veer Gupta's projects — Vykan Capital, derivatives & FOMC volatility research, and this portfolio site.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topnav">
+  <div class="wrap">
+    <a href="index.html" class="topnav-logo">VG.</a>
+    <nav aria-label="Primary navigation">
+      <ul class="topnav-links" id="navLinksList">
+        <li><a href="about.html">About</a></li>
+        <li><a href="experience.html">Experience</a></li>
+        <li><a href="projects.html" class="current">Projects</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="topnav-actions">
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+      <button class="theme-toggle" id="themeToggle" aria-pressed="false">☾ terminal / paper</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="page-hero">
+    <div class="wrap">
+      <div class="eyebrow">Projects</div>
+      <h1>What I've built, backtested, and traded.</h1>
+      <p class="page-intro">Metrics below animate in as you scroll &mdash; the underlying numbers are real, not decoration.</p>
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="wrap">
+
+      <div class="project-row">
+        <div class="project-head">
+          <h3>Vykan Capital</h3>
+          <div class="project-metrics">
+            <span class="metric-up counter" data-target="290" data-prefix="+" data-suffix="% net return">+290% net return</span>
+            <span class="metric-neutral counter" data-target="55000" data-prefix="$" data-suffix="+ volume" data-comma="true">$55,000+ volume</span>
+            <span class="metric-neutral">
+              <span class="counter" data-target="300" data-prefix="~$">~$300</span>
+              &rarr;
+              <span class="counter" data-target="1175" data-prefix="~$" data-comma="true">~$1,175</span>
+            </span>
+          </div>
+        </div>
+        <p class="project-desc">A live algorithmic trading system on Kalshi prediction markets: RSA-PSS authenticated API access, WebSocket order-book feeds, a favorite-longshot bias strategy, mutually-exclusive-market arbitrage, and Kelly-sized position management, monitored through a custom Flask dashboard.</p>
+        <div class="project-stack">Python · Kelly criterion · WebSockets · Flask · backtest engine · bootstrap confidence intervals</div>
+        <!-- Screenshot placeholder: assignment requires at least one screenshot per project.
+             Swap this div for a real <img> of the Flask dashboard once captured. -->
+        <div class="screenshot-placeholder">[ dashboard screenshot &mdash; to add ]</div>
+        <div class="project-links"><a href="#">Code &rarr;</a></div>
+      </div>
+
+      <div class="project-row">
+        <div class="project-head">
+          <h3>Derivatives &amp; FOMC Volatility Research</h3>
+          <div class="project-metrics">
+            <span class="metric-neutral">Black-Scholes</span>
+            <span class="metric-neutral">SKEW-index proxy</span>
+          </div>
+        </div>
+        <p class="project-desc">Ongoing research with a mentor at Arch Capital covering costless collars, ELN structuring, and Black-Scholes valuation, plus a backtesting pipeline that uses the CBOE SKEW index as a proxy signal around FOMC volatility events.</p>
+        <div class="project-stack">Python · yfinance · options theory · signal backtesting</div>
+        <div class="screenshot-placeholder">[ backtest chart &mdash; to add ]</div>
+      </div>
+
+      <div class="project-row">
+        <div class="project-head">
+          <h3>This Portfolio Website</h3>
+          <div class="project-metrics"><span class="metric-neutral">15-113, Project 1</span></div>
+        </div>
+        <p class="project-desc">Built for CMU 15-113, Effective Coding with AI &mdash; planned and built with AI assistance (see the prompt log in this repo), then reviewed and modified by hand.</p>
+        <div class="project-stack">HTML · CSS · JavaScript · GitHub Pages</div>
+      </div>
+
+      <!-- Placeholder for future coursework, per assignment instructions -->
+      <div class="project-row">
+        <div class="placeholder-box">
+          More 15-113 projects will be added here throughout the semester.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© Veer Gupta</span>
+    <span class="mono">Built with AI assistance (Claude) — see prompt-log.txt</span>
+  </div>
+</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>
