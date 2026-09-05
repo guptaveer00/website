@@ -1,0 +1,468 @@
+/* =================================================================
+   VEER GUPTA — PORTFOLIO STYLES
+   "Prop Desk" design concept: Bloomberg-terminal-inspired data
+   density + typeset-research-memo restraint. One accent (amber),
+   green/red reserved strictly for real metric values.
+   Breakpoints: desktop (>1024px), tablet (861–1024px),
+   mobile (≤860px, with extra tightening ≤480px).
+   ================================================================= */
+
+/* -----------------------------------------------------------------
+   1. DESIGN TOKENS
+   ----------------------------------------------------------------- */
+:root {
+  --bg: #0E1116;
+  --surface: #161B22;
+  --surface-2: #1C222B;
+  --text: #E7E3DA;
+  --text-dim: #8B92A0;
+  --accent: #C99A4A;
+  --accent-dim: #8A6B37;
+  --up: #4F9C6D;
+  --down: #C1554A;
+  --rule: #2A313C;
+
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SF Mono', Menlo, monospace;
+
+  --rail-w: 220px;
+  --rail-w-tablet: 188px;
+  --max-w: 720px;
+}
+
+/* "Paper" theme — light-mode toggle target.
+   Metaphor: terminal screen <-> printed research note. */
+body.theme-paper {
+  --bg: #F4F1E9;
+  --surface: #EAE6DA;
+  --surface-2: #E2DDCE;
+  --text: #201C14;
+  --text-dim: #6B6455;
+  --accent: #9C6B1F;
+  --accent-dim: #B98A3E;
+  --up: #2E7D4F;
+  --down: #A63B2D;
+  --rule: #D3CCB8;
+}
+
+/* -----------------------------------------------------------------
+   2. RESET & BASE
+   ----------------------------------------------------------------- */
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0 0 0.5em 0;
+}
+
+p { margin: 0 0 16px 0; }
+
+.mono { font-family: var(--font-mono); }
+
+img { max-width: 100%; display: block; }
+
+/* -----------------------------------------------------------------
+   3. LAYOUT SHELL — fixed left rail + main content column
+   ----------------------------------------------------------------- */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.rail {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: var(--rail-w);
+  background: var(--surface);
+  border-right: 1px solid var(--rule);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.rail-top .rail-id {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+.rail-top .rail-rule {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 16px 0 20px 0;
+}
+
+.rail nav ul {
+  list-style: none;
+  margin: 0; padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rail nav a {
+  color: var(--text-dim);
+  font-size: 14.5px;
+  padding-left: 10px;
+  border-left: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.rail nav a:hover { color: var(--text); text-decoration: none; }
+
+/* Scroll-spy active state, set via JS IntersectionObserver */
+.rail nav a.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+}
+
+.rail-bottom { font-size: 13.5px; }
+
+.rail-contact { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.rail-contact a { color: var(--text-dim); }
+.rail-contact a:hover { color: var(--accent); }
+
+.theme-toggle {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  background: none;
+  border: 1px solid var(--rule);
+  color: var(--text-dim);
+  padding: 7px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+main {
+  margin-left: var(--rail-w);
+  flex: 1;
+  padding: 64px 48px 96px 64px;
+  max-width: 980px;
+}
+
+section { padding: 56px 0; border-bottom: 1px solid var(--rule); }
+section:last-of-type { border-bottom: none; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+footer {
+  margin-left: var(--rail-w);
+  padding: 28px 64px 40px;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  border-top: 1px solid var(--rule);
+}
+
+/* -----------------------------------------------------------------
+   4. HERO
+   ----------------------------------------------------------------- */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding-top: 24px;
+  padding-bottom: 56px;
+  opacity: 0;
+  animation: hero-in 0.7s ease 0.1s forwards;
+}
+
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero img {
+  width: 152px;
+  height: 152px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+
+.hero h1 { font-size: 40px; margin-bottom: 6px; }
+.hero .tagline {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 15px;
+  margin-bottom: 14px;
+}
+.hero .positioning { max-width: 56ch; color: var(--text-dim); margin: 0; }
+
+/* -----------------------------------------------------------------
+   5. ABOUT
+   ----------------------------------------------------------------- */
+.about-body { max-width: var(--max-w); }
+
+.interests-line {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 20px;
+}
+.interests-line span.sep { color: var(--rule); margin: 0 8px; }
+
+/* -----------------------------------------------------------------
+   6. EXPERIENCE — chronological timeline
+   ----------------------------------------------------------------- */
+.timeline { max-width: var(--max-w); }
+
+.tl-entry {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 20px;
+  padding: 22px 0;
+  border-top: 1px solid var(--rule);
+}
+.tl-entry:first-child { border-top: none; }
+
+.tl-date {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-dim);
+  padding-top: 3px;
+}
+
+.tl-role { font-weight: 600; font-size: 17px; margin-bottom: 2px; }
+.tl-org { color: var(--accent); font-size: 14.5px; margin-bottom: 8px; }
+.tl-desc { color: var(--text-dim); font-size: 14.5px; max-width: 60ch; }
+
+/* -----------------------------------------------------------------
+   7. PROJECTS — ledger rows (not shadow-cards); metrics get
+   monospace + functional up/down color.
+   ----------------------------------------------------------------- */
+.project-row {
+  padding: 26px 0;
+  border-top: 1px solid var(--rule);
+}
+.project-row:first-child { border-top: none; }
+
+.project-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.project-head h3 { font-size: 19px; margin: 0; }
+
+.project-metrics {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.project-metrics .metric-up { color: var(--up); }
+.project-metrics .metric-down { color: var(--down); }
+.project-metrics .metric-neutral { color: var(--text-dim); }
+
+.project-desc { color: var(--text-dim); max-width: 68ch; margin-bottom: 10px; }
+
+.project-stack {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+
+.project-links { margin-top: 10px; font-size: 14px; }
+
+.placeholder-box {
+  border: 1px dashed var(--rule);
+  border-radius: 3px;
+  padding: 18px;
+  color: var(--text-dim);
+  font-size: 14px;
+  font-family: var(--font-mono);
+}
+
+.screenshot-placeholder {
+  margin-top: 12px;
+  border: 1px dashed var(--rule);
+  border-radius: 3px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-dim);
+  max-width: 68ch;
+}
+
+/* -----------------------------------------------------------------
+   8. CONTACT
+   ----------------------------------------------------------------- */
+.contact-intro { color: var(--text-dim); max-width: 60ch; }
+
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: var(--max-w);
+  margin-top: 20px;
+}
+.contact-links a {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--text);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.contact-links a:hover { color: var(--accent); text-decoration: none; }
+.contact-links a .label { color: var(--text-dim); font-family: var(--font-sans); font-size: 14px; }
+
+/* =================================================================
+   9. RESPONSIVE BREAKPOINTS
+   ================================================================= */
+
+/* ---- Tablet (861px–1024px): keep the rail, tighten spacing ---- */
+@media (max-width: 1024px) {
+  :root { --rail-w: var(--rail-w-tablet); }
+
+  main {
+    padding: 52px 36px 80px 44px;
+  }
+
+  footer {
+    padding: 24px 44px 36px;
+  }
+
+  .hero { gap: 28px; }
+  .hero img { width: 132px; height: 132px; }
+  .hero h1 { font-size: 34px; }
+
+  section { padding: 44px 0; }
+}
+
+/* ---- Mobile (≤860px): rail becomes a top bar ---- */
+@media (max-width: 860px) {
+  :root { --rail-w: 0px; }
+
+  .rail {
+    position: static;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .rail-top, .rail-bottom {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .rail-top .rail-rule { display: none; }
+
+  .rail nav ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .rail nav a {
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    padding-left: 0;
+    padding-bottom: 2px;
+  }
+  .rail nav a.active {
+    border-left-color: transparent;
+    border-bottom-color: var(--accent);
+  }
+
+  .rail-contact {
+    flex-direction: row;
+    margin-bottom: 0;
+    gap: 14px;
+  }
+
+  .theme-toggle { width: auto; }
+
+  main, footer { margin-left: 0; padding: 40px 24px 64px; }
+  footer { padding-top: 24px; }
+
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    padding-bottom: 40px;
+  }
+  .hero img { width: 120px; height: 120px; }
+  .hero h1 { font-size: 30px; }
+
+  .tl-entry { grid-template-columns: 1fr; gap: 4px; }
+
+  section { padding: 40px 0; }
+}
+
+/* ---- Small mobile (≤480px): final tightening ---- */
+@media (max-width: 480px) {
+  .rail {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .rail-top { flex-wrap: wrap; gap: 10px; }
+  .rail nav ul { gap: 12px; }
+
+  main, footer { padding-left: 18px; padding-right: 18px; }
+
+  .hero h1 { font-size: 26px; }
+  .hero .tagline { font-size: 13.5px; }
+
+  .project-head { flex-direction: column; align-items: flex-start; }
+
+  .contact-links a { flex-direction: column; align-items: flex-start; gap: 2px; }
+}
+
+/* -----------------------------------------------------------------
+   10. ACCESSIBILITY
+   ----------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero { animation: none; opacity: 1; }
+}
