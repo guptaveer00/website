@@ -402,19 +402,31 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
 }
 .achievements-list li {
   display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 0;
+  border-top: 1px solid var(--rule);
+}
+.achievements-list li:first-child { border-top: none; }
+.achievements-list .ach-row {
+  display: flex;
   justify-content: space-between;
   align-items: baseline;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 16px 0;
-  border-top: 1px solid var(--rule);
   font-size: 15.5px;
 }
-.achievements-list li:first-child { border-top: none; }
 .achievements-list .ach-place {
   font-family: var(--font-mono);
   font-size: 14px;
   color: var(--accent);
+  flex-shrink: 0;
+}
+.achievements-list .ach-desc {
+  color: var(--text-dim);
+  font-size: 14.5px;
+  max-width: 68ch;
+  margin: 0;
 }
 
 /* -----------------------------------------------------------------
