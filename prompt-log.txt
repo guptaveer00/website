@@ -1,9 +1,9 @@
 PROMPT LOG — CMU 15-113, Project 1 (Personal Portfolio Website)
 AI tool used: Claude (Claude.ai)
 
-================================================================
+
 1. PLANNING THE SITE STRUCTURE
-================================================================
+
 
 ME: Here's my assignment for CMU 15-113. I need to build a personal
 portfolio website. You know my background from my resume like school,
@@ -19,9 +19,7 @@ Contact. Suggested a "quant trading terminal" visual direction instead of
 a generic template look, and asked whether to turn this into a wireframe
 or go straight to code.
 
-================================================================
 2. DESIGN CONCEPT
-================================================================
 
 ME: Before building, propose a visual design concept for this; color
 palette, typography, and layout, that actually fits a trading/quant/
@@ -38,9 +36,8 @@ hairline rules instead of card shadows). Flagged one part of the plan
 that risked reading as a generic AI-design pattern and explained why I
 was keeping it anyway, tied to the ledger metaphor.
 
-================================================================
+
 3. BUILDING THE FIRST VERSION (index.html)
-================================================================
 
 ME: That design direction works. Now build the full index.html for the
 site using this structure and my content. Include an About section, a
@@ -57,9 +54,9 @@ feature, and added code comments documenting where AI drafted the logic
 versus where I reviewed/adjusted it, per the assignment's AI
 documentation requirement.
 
-================================================================
+
 4. RESPONSIVE STYLING (styles.css)
-================================================================
+
 
 ME: Great. Now write the full styles.css to match the design concept
 you proposed, make sure it's responsive for desktop, tablet, and mobile.
@@ -69,9 +66,9 @@ breakpoints (desktop, tablet ~861–1024px, mobile ≤860px, plus extra
 tightening ≤480px), and updated index.html to link to it instead of
 using inline styles.
 
-================================================================
+
 5. ADDING A JAVASCRIPT FEATURE (script.js)
-================================================================
+
 
 ME: Add at least one JavaScript-powered interactive feature, for
 example a mobile nav toggle, scroll-based nav highlighting, or an
@@ -84,9 +81,9 @@ that plays once when scrolled into view. Explained the fallback
 behavior (the real number is always in the HTML in case JavaScript
 fails to load)
 
-================================================================
+
 6. DEPLOYING TO GITHUB PAGES
-================================================================
+
 
 ME: now how do i push all this to https://github.com/guptaveer00/website
 
@@ -101,16 +98,15 @@ committing anything. Claude walked me through checking `pwd`/`ls`/
 `git status` at each step before running commands, which is what
 caught the home-directory mistake before anything was pushed.]
 
-ME: [pasted terminal output after a successful push]
+ME: pasted terminal output after a successful push
 
 CLAUDE: Confirmed the push succeeded and gave the remaining steps:
 enabling GitHub Pages in repo settings, and creating a prompt-log.txt
 for submission.
 
 
-================================================================
+
 7. ADDING COMPANY LOGOS AND COMPETITION RESULTS
-================================================================
 
 ME: use this as the arch capital logo, delphi, and traders, is the
 third one, and make sure to include Jane Street Market Making
