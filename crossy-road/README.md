@@ -1,5 +1,5 @@
 # Crossy Campus
-Get the character to class on time; avoid and dodge all the obstacles!
+Get the character to class on time; avoid and dodge all the obstacles! Different from stock Crossy Road, as you are not getting a chicken across the road, but a CMU student!
 
 ## How to play
 - Arrow keys or WASD hop one grid square. Hold a key to keep hopping; a tap during a hop queues the next move. 
