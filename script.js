@@ -1,22 +1,6 @@
 /* ===================================================================
    VEER GUPTA — PORTFOLIO SCRIPT (v2 — multi-page rebuild)
    CMU 15-113, Project 1
-
-   AI USAGE NOTE (assignment requirement — see prompt-log.txt for the
-   full conversational log): drafted with AI assistance (Claude).
-   Each feature has its own comment marking what the AI wrote/
-   proposed and what I reviewed or changed.
-
-   Why this file changed from v1: the site was restructured from a
-   single scrolling page into five separate pages (index, about,
-   experience, projects, contact) with a fixed top nav instead of a
-   left rail. That made the old scroll-spy feature (which highlighted
-   the current section as you scrolled one long page) meaningless —
-   there's no single page to scroll through anymore. I removed it and
-   replaced it with a mobile hamburger menu, since a fixed top nav
-   actually needs a collapse behavior on small screens that the old
-   left-rail layout didn't.
-
    Features:
    1. Theme toggle    — terminal <-> "paper" light mode (unchanged)
    2. Mobile nav menu — hamburger opens/closes the nav links (NEW,
@@ -76,18 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* -----------------------------------------------------------------
      3. ANIMATED STAT COUNTERS (projects.html)
-     AI-assisted end to end, unchanged from the single-page version.
-     Each ".counter" element already contains its real, final text
-     (e.g. "+290% net return") so the numbers are correct even if
-     JavaScript fails to load — the animation is a progressive
-     enhancement, not the only source of truth. data-target /
-     data-prefix / data-suffix / data-comma attributes tell the
-     script the number to count to and how to format it.
-     requestAnimationFrame + an ease-out cubic curve drives the
-     animation; IntersectionObserver fires it once per element, the
-     first time it scrolls into view, then stops observing so it
-     doesn't replay on scroll up/down. prefers-reduced-motion skips
-     straight to the final value.
      ----------------------------------------------------------------- */
   const counters = document.querySelectorAll('.counter');
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crossy Campus</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <main>
+    <header><p class="eyebrow">PITTSBURGH, PA · CAMPUS CROSSING</p><h1>Crossy <span>Campus</span></h1><p>Backpack on. Eyes on the road. Make it to your next class.</p></header>
+    <section class="game" aria-label="Crossy Campus game">
+      <div class="toolbar"><p id="status" role="status">Your next class is up ahead.</p><button id="restart">Restart</button></div>
+      <div class="stage"><div class="playfield"><strong id="score" aria-label="Forward steps">0</strong><canvas id="board" width="528" height="624" tabindex="0" aria-label="Game board. Use arrow keys or WASD to move. Avoid cars, ride logs over rivers, and go around trees and rocks. Each completed forward hop earns one point."></canvas></div></div>
+      <div class="controls" aria-label="Touch movement controls"><button data-move="up" aria-label="Move forward">↑</button><div><button data-move="left" aria-label="Move left">←</button><button data-move="down" aria-label="Move backward">↓</button><button data-move="right" aria-label="Move right">→</button></div></div>
+      <footer><span><b>WASD / ARROW KEYS</b> to hop · Hold to keep moving</span><span>Ride logs · Avoid traffic · Forward hop = +1 · <b>R</b> to restart</span></footer>
+    </section>
+    <p class="note">A student-made campus crossing game · 2.5D campus edition</p>
+  </main>
+</body>
+</html>
