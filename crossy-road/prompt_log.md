@@ -37,3 +37,15 @@ lengthen the actual crossy road to fit it all
 ## Off-screen traffic — user prompt (verbatim)
 
 the cars and graphic should do to the end of the game screen and not just cut out, it should be like they drive off the screen you know
+
+## Playable boundaries — user prompt (verbatim)
+
+can u add a soft red line in the game to show the edges vertically
+
+## Screen movement boundaries — user prompt (verbatim)
+
+on second thought can u remvoe the red lines and just make the edges the character can fo to the same as the screen
+
+## Full-width scenery — user prompt (verbatim)
+
+make sure all the trees and visuals also go to the end

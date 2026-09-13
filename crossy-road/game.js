@@ -2,7 +2,7 @@
 (() => {
   const canvas = document.querySelector('#board'), ctx = canvas.getContext('2d');
   const scoreEl = document.querySelector('#score'), statusEl = document.querySelector('#status');
-  const COLS = 11, HOP = .18;
+  const HOP = .18;
   let viewWidth=528;
   const directions = {up:[0,1],down:[0,-1],left:[-1,0],right:[1,0]};
   const keys = {ArrowUp:'up',w:'up',ArrowDown:'down',s:'down',ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right'};
@@ -15,10 +15,22 @@
       const lane={road,river,logs:[],obstacles:[],direction:row%2?1:-1,speed:Math.min(2.7,1.15+row*.025),cars:[]};
       if(road) for(let i=0;i<4;i++) lane.cars.push({x:i*5.4-5+(row*1.37%3),width:row%4===0?1.85:1.5,color:colors[(i+row)%4]});
       if(river){lane.speed=.65+(row%3)*.12;for(let i=0;i<5;i++)lane.logs.push({x:i*4.6-6+(row%2)*1.5,width:3.3});}
-      if(!road&&!river&&row>1){for(const col of [1+(row*3%4),7+(row%3)])lane.obstacles.push({col,type:col%2?'tree':'rock'});}
       lanes.set(row,lane);
     }
-    return lanes.get(row);
+    const lane=lanes.get(row);
+    if(!lane.road&&!lane.river){
+      const {left,right}=laneBounds(row);
+      lane.obstacles=[];
+      // Repeat stable, spaced scenery into every visible section of the lane.
+      for(let band=Math.floor(left/11)-1;band<=Math.ceil(right/11);band++){
+        for(const local of [1+(row*3%4),7+(row%3)]){
+          const col=band*11+local;
+          if(col<left-1||col>right+1||(row<2&&col>=3&&col<=7))continue;
+          lane.obstacles.push({col,type:Math.abs(col)%2?'tree':'rock'});
+        }
+      }
+    }
+    return lane;
   }
   function reset() {
     player={col:5,row:0,x:5.5,y:.5,z:0};lanes=new Map();camera=0;targetCamera=0;furthest=0;score=0;over=false;lastTime=null;hop=null;queued=null;held=new Map();landing=0;
@@ -28,15 +40,22 @@
     for(let r=Math.max(0,Math.floor(camera)-3);r<Math.ceil(camera)+18;r++)laneAt(r);
     for(const r of lanes.keys())if(r<Math.floor(camera)-4)lanes.delete(r);
   }
+  function screenLimits(y){
+    // Keep the full student sprite inside the current canvas, with a small visual margin.
+    const offset=(y-camera-.5)*19;
+    return {left:5.5+(20-viewWidth/2-offset)/43,right:5.5+(viewWidth-20-viewWidth/2-offset)/43};
+  }
   function move(direction) {
     if(over)return;
     if(hop){queued=direction;return;}
     const [dx,dy]=directions[direction];
-    const x=player.x+dx;
-    if(x<.24||x>COLS-.24)return;
-    const col=Math.floor(x);
+    let x=player.x+dx;
     const row=Math.max(Math.floor(targetCamera),player.row+dy);
-    if(dx===0&&row===player.row)return;
+    const limits=screenLimits(row+.5);
+    if(dx!==0)x=Math.max(limits.left,Math.min(limits.right,x));
+    else if(x<limits.left||x>limits.right)return;
+    const col=Math.floor(x);
+    if(Math.abs(x-player.x)<.001&&row===player.row)return;
     if(laneAt(row).obstacles.some(o=>Math.abs(x-(o.col+.5))<.7))return;
     hop={fromX:player.x,fromY:player.y,toX:x,toY:row+.5,col,row,forward:dy>0,t:0};
     landing=0;
@@ -54,7 +73,7 @@
   }
   function laneBounds(row){
     // Invert the horizontal projection, with padding for complete vehicles and camera motion.
-    const center=player.x-(row-camera)*19/43;
+    const center=5.5-(row-camera)*19/43;
     return {left:Math.min(-8,center-viewWidth/86-5),right:Math.max(19,center+viewWidth/86+5)};
   }
   function advanceTraffic(row,lane,dt){
@@ -83,13 +102,13 @@
     } else landing=Math.max(0,landing-dt);
     collision();
     if(over)return;
-    if(!hop&&laneAt(player.row).river&&(!support()||player.x<.24||player.x>COLS-.24)){lose('Into the river!');return;}
+    if(!hop&&laneAt(player.row).river&&(!support()||player.x<screenLimits(player.y).left||player.x>screenLimits(player.y).right)){lose('Into the river!');return;}
     if(finished){furthest=Math.max(furthest,player.row);if(forward)score++;scoreEl.textContent=String(score);targetCamera=Math.max(targetCamera,player.row-3);}
     camera+=(targetCamera-camera)*(1-Math.exp(-8*dt));
     if(!hop){const next=queued||Array.from(held.values()).pop();queued=null;if(next)move(next);}
   }
   // Parallel projection: ground tiles are parallelograms; vertical edges stay upright.
-  function project(x,y,z=0){return {x:viewWidth/2+(x-player.x)*43+(y-camera-.5)*19,y:515-(y-camera-.5)*35+(x-player.x)*18-z};}
+  function project(x,y,z=0){return {x:viewWidth/2+(x-5.5)*43+(y-camera-.5)*19,y:515-(y-camera-.5)*35+(x-player.x)*18-z};}
   function polygon(points,color){ctx.fillStyle=color;ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();}
   function tile(x,y,w,d,color,z=0){polygon([project(x,y,z),project(x+w,y,z),project(x+w,y+d,z),project(x,y+d,z)],color);}
   function shade(hex,factor){const n=parseInt(hex.slice(1),16);return `rgb(${(n>>16)*factor|0},${((n>>8)&255)*factor|0},${(n&255)*factor|0})`;}
@@ -137,9 +156,8 @@
         for(const c of lane.cars)objects.push({depth:project(c.x+c.width/2,r+.5).y,draw:()=>car(c,r,lane.direction)});
       } else {
         if(r%5===1||r===0){tile(left,r+.18,span,.62,'#f0ddaa');for(let x=Math.floor(left);x<right;x++)tile(x,r+.18,.018,.62,'#d8c38b');}
-        else for(let x=-2;x<14;x++)if((x+r)%3===0)tile(x+.3,r+.4,.12,.14,'#80996f');
+        else for(let x=Math.floor(left);x<right;x++)if((x+r)%3===0)tile(x+.3,r+.4,.12,.14,'#80996f');
         for(const obstacle of lane.obstacles){const x=obstacle.col+.5;objects.push({depth:project(x,r+.5).y,draw:()=>{if(obstacle.type==='tree')tree(x,r+.5);else{box(x-.3,r+.2,.65,.6,17,'#a4a4c5');box(x-.2,r+.28,.42,.4,9,'#c2c4df',17);}}});}
-        for(const x of [-1.3,12])objects.push({depth:project(x,r+.5).y,draw:()=>tree(x,r+.5)});
         if(r%10===1)objects.push({depth:project(1,r+.8).y,draw:()=>sign(1,r+.8,r===1?'CMU':'TO CLASS')});
       }
     }
