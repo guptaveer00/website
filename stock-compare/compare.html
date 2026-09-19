@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stock Compare — Veer Gupta</title>
+<meta name="description" content="Compare historical stock performance, growth of $100, volatility, and drawdowns using public market data.">
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="style.css">
+<script src="../script.js" defer></script><script src="analytics.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+<header class="topnav"><div class="wrap"><a class="topnav-logo" href="../index.html">VG.</a><a href="./">← Back to game</a><button class="theme-toggle" id="themeToggle" aria-pressed="false">☾ terminal / paper</button></div></header>
+<main class="wrap compare-main">
+<section class="intro"><p class="eyebrow">MARKET LAB / 01</p><h1>Stock Compare Using an API</h1><p>Put $100 in each. Compare the journey, not just the share price.</p></section>
+<section class="panel controls" aria-label="Choose stocks and dates">
+<form id="compare-form" novalidate>
+<div class="inputs"><label>First ticker<input id="ticker-a" value="AAPL" maxlength="10" spellcheck="false" autocapitalize="characters" autocomplete="off" list="tickers"></label><label>Second ticker<input id="ticker-b" value="MSFT" maxlength="10" spellcheck="false" autocapitalize="characters" autocomplete="off" list="tickers"></label><label>From<input id="start" type="date"></label><label>Through<input id="end" type="date"></label><button class="compare-button" type="submit" id="submit">Compare stocks ↗</button></div>
+<datalist id="tickers"><option value="AAPL">Apple</option><option value="MSFT">Microsoft</option><option value="NVDA">NVIDIA</option><option value="AMZN">Amazon</option><option value="GOOGL">Alphabet</option><option value="META">Meta</option><option value="TSLA">Tesla</option><option value="JPM">JPMorgan Chase</option><option value="SPY">S&amp;P 500 ETF</option></datalist>
+<div class="presets"><span>Quick range</span><button type="button" data-days="30">1M</button><button type="button" data-days="90">3M</button><button type="button" data-days="180">6M</button><button type="button" data-days="365">1Y</button><span class="hint">US tickers · Daily history · No account needed</span></div>
+</form></section>
+<p id="status" role="status" aria-live="polite">Choose two tickers to explore.</p>
+<div id="results" hidden>
+<section class="panel chart-panel" aria-labelledby="chart-heading"><div class="chart-heading"><div><p class="eyebrow">SAME DATES. SAME $100.</p><h2 id="chart-heading">Growth of $100</h2></div><div id="legend" class="legend"></div></div>
+<p id="period" class="subtle"></p>
+<svg id="chart" viewBox="0 0 900 340" role="img" aria-labelledby="chart-title chart-description"><title id="chart-title">Historical comparison</title><desc id="chart-description">Use the date slider below to read individual values.</desc></svg>
+<div class="inspection"><label for="scrubber">Explore a trading date</label><output id="point-readout" for="scrubber"></output></div><input type="range" id="scrubber" min="0" max="1" value="1" aria-label="Trading date">
+</section>
+<section class="metrics" id="metrics" aria-label="Stock comparison metrics"></section>
+<p id="insight" class="insight"></p><p id="source-note" class="subtle"></p>
+<button id="download" class="secondary" type="button">Download compared data ↓</button>
+</div>
+<details class="method"><summary>How the comparison works</summary><p>Both series use only dates available for both tickers. Each starts at $100: value = 100 × adjusted close ÷ first adjusted close. Return is the change between the first and last shared dates. Fees and taxes are excluded.</p><p>Volatility is the sample standard deviation of daily percentage returns, multiplied by √252. It describes past fluctuations, not future risk. If the API omits different dates for each ticker, volatility is unavailable rather than treating multi-day returns as daily returns. Maximum drawdown is the largest decline from a previous peak within this window.</p><p>The API provider documents split- and dividend-adjusted history. IEX data covers one exchange, so prices and volume can differ from consolidated market data. This is an educational comparison, not a live quote or investment recommendation.</p></details>
+<footer class="feature-footer"><span>Built by Veer Gupta · Public API experiment</span><a href="https://fintable.io/docs#stock-price" target="_blank" rel="noopener">Data: Fintable / IEX ↗</a></footer>
+<noscript>This comparison needs JavaScript enabled to fetch stock history.</noscript>
+</main>
+</body></html>

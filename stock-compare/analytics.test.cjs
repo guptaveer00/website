@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict');
+const {normalize,stats,compare}=require('./analytics.js');
+const close=(a,b)=>assert(Math.abs(a-b)<1e-9,`${a} != ${b}`);
+const sample=stats([100,120,90,110]);close(sample.returnPct,10);close(sample.finalValue,110);close(sample.drawdown,-25);
+close(stats([10,10,10]).volatility,0);
+const expectedReturns=[.2,-.25,110/90-1],mean=expectedReturns.reduce((a,b)=>a+b)/3;close(sample.volatility,Math.sqrt(expectedReturns.reduce((a,b)=>a+(b-mean)**2,0)/2*252)*100);
+const series=(symbol,entries)=>({symbol,feed:'iex',bars:entries.map(([date,close])=>({date,close}))});
+const a=series('A',[['2026-01-01',10],['2026-01-02',20],['2026-01-03',30],['2026-01-04',40]]);
+const b=series('B',[['2026-01-01',20],['2026-01-03',40],['2026-01-04',60]]);
+const result=compare(a,b);assert.equal(result.dates.length,3);assert.equal(result.series[0].volatility,null);close(result.series[0].returnPct,300);close(result.series[1].returnPct,200);
+assert.throws(()=>compare(a,series('B',[])),/shared trading dates/);
+const normalized=normalize({data:{symbol:'A',currency:'USD',bars:[{date:'2026-01-03',close:'30'},{date:'2026-01-01',close:'10'},{date:'2026-01-02',close:'20'},{date:'2026-01-02',close:'20'},{date:'2026-01-04',close:null}]}},'A','2026-01-01','2026-01-04');assert.equal(normalized.bars.length,3);assert.equal(normalized.bars[0].close,10);
+assert.throws(()=>normalize({data:{symbol:'WRONG',currency:'USD',bars:[]}},'A','2026-01-01','2026-01-04'),/unexpected/);
+console.log('PASS: returns, normalized values, drawdown, sample volatility, date alignment, missing dates, sorting, deduplication, invalid payloads.');
