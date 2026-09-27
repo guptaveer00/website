@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sam Altman AI Chat — Veer Gupta</title>
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="chat.css">
+<script defer src="../script.js"></script><script defer src="config.js"></script><script defer src="chat.js"></script>
+</head>
+<body>
+<header class="chat-nav"><a href="../index.html">VG.</a><a href="../projects.html">← Projects</a><label><input type="checkbox" id="themeToggle"> Paper theme</label></header>
+<main class="chat-layout">
+<aside><p class="eyebrow">AN EXPERIMENT IN CONVERSATION</p><h1>Big ideas.<br>A little <em>back-and-forth.</em></h1><p>Chat with an AI simulation inspired by Sam Altman about startups, technology, and what comes next.</p><p class="disclosure"><strong>Unofficial AI simulation.</strong> Not the real Sam Altman. Not affiliated with or endorsed by Sam Altman or OpenAI. Replies are generated, may be inaccurate, and aren’t quotes or statements from him.</p><div class="starters"><p>Try a conversation starter</p><button type="button">How should a student test a startup idea?</button><button type="button">What makes an AI product useful?</button><button type="button">How do you think about ambitious goals?</button></div><p class="privacy">Messages and recent conversation context are sent to this site’s backend and Google Gemini to generate replies. Google’s free tier may use submitted content to improve its products. This page keeps the conversation only while it is open. Avoid sharing sensitive information.</p></aside>
+<section class="chat-panel" aria-label="Chat with AI simulation">
+<div class="panel-head"><div><strong>Sam Altman · AI simulation</strong><span>Startups / AI / Building things</span></div><button id="clear" type="button">New chat</button></div>
+<div id="messages" role="log" aria-live="polite" aria-relevant="additions" tabindex="0"><article class="bubble assistant"><small>AI SIMULATION</small><p>Hi! I’m an unofficial AI simulation, not Sam Altman. Bring an idea, a question, or something you’re trying to build. Where should we start?</p></article></div>
+<p id="status" role="status"></p><p id="error" role="alert" hidden></p>
+<form id="chat-form"><label for="message">Your message</label><textarea id="message" name="message" rows="3" maxlength="1500" placeholder="What are you thinking about?" required></textarea><div class="composer-foot"><small>Enter to send · Shift + Enter for a new line</small><button id="send" type="submit">Send ↗</button></div></form>
+<p class="service-note">The first reply may take about a minute while the demo server wakes up.</p>
+</section>
+</main>
+</body></html>
