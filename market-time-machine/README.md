@@ -98,3 +98,32 @@ Terminal tools were used to run the code and test the backend. Web search was us
 ## Sources
 
 Historical prices came from [Yahoo Finance’s chart endpoint](https://query1.finance.yahoo.com/v8/finance/chart/SPY?range=20y&interval=1mo). Yahoo’s explanation of adjusted prices is available in its [adjusted-close documentation](https://in.help.yahoo.com/kb/adjusted-close-sln28256.html).
+
+
+## AI-generated documentation — paper portfolio update
+
+The new paper portfolio monitor lets you test a pretend portfolio starting at current prices. It uses Fintable, a second API, to request prices for SPY, QQQ, AGG, and GLD. These prices are separate from the Yahoo historical data. Quotes can be delayed, so their timestamps and source are shown.
+
+### How to use the new section
+
+Set your starting balance, allocation percentages, and trading fee in the strategy form. Scroll to **Paper portfolio monitor**, enter a name, and click **Start paper portfolio at latest prices**. Historical dates, monthly deposits, and the rebalancing schedule do not apply to this section.
+
+The backend converts your pretend money into fractional shares after purchase costs and saves those holdings in SQLite. Return later, choose the saved portfolio, and click **Refresh valuation**. The app requests the latest available prices and calculates the portfolio's value, gain or loss, and allocation drift. Drift means how far an investment's percentage has moved from your original target.
+
+It also previews the purchases and sales needed to restore your targets, including estimated fees. This is a preview only; it does not change holdings or place real trades. Each fresh price request records a valuation observation, which builds a chart over time. You can download a report to keep a copy.
+
+### How the new code works
+
+`paper.js` controls this section and displays its chart. `backend/paper.py` requests and validates Fintable prices, creates holdings, values them, and calculates the rebalancing preview. `backend/app.py` saves portfolios and observations in the database.
+
+The frontend uses `/api/paper` to create and list portfolios and `/api/paper/value` to value them. `/api/quotes` returns validated current prices. The backend shares a 60-second price cache to reduce repeated requests. No API key was needed for the tested Fintable endpoint.
+
+Incomplete or invalid price responses produce an error instead of invented prices. New portfolios are blocked if quotes are over 96 hours old. Refreshing an existing portfolio does not alter its saved holdings. Saved portfolios and observations can disappear after Render Free restarts, so download important results.
+
+### Testing and AI use
+
+All 12 calculation tests passed, including six new tests for paper holdings, allocation drift, rebalancing costs, all-cash portfolios, invalid allocations, and stale prices. Local API tests checked saving, loading, cache deduplication, and browser ownership isolation. Browser tests checked creating and reopening portfolios and the phone layout.
+
+Codex generated this feature and this documentation. Actual prompts and development notes are in the separate `prompt_log.md`. This does not claim student-authored code contributions. The README still needs Veer's own explanation of his favorite features and actual personal edits before submission.
+
+Current-price source: [Fintable API documentation](https://fintable.io/docs).
