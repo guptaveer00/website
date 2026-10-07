@@ -1,50 +1,151 @@
 # Market Time Machine
 
-Market Time Machine is a web app that lets you test investment strategies using real historical market data and pretend money. You can choose a time period, divide your money between different investments, and see how your strategy would have performed.
+Market Time Machine lets users test investment strategies with real historical data and pretend money. Users can compare strategies across past market conditions and start a paper portfolio using current prices.
 
-https://website-1-xx5b.onrender.com  
-## How to use it
+**Live app:** https://website-1-xx5b.onrender.com  
+**Portfolio:** https://guptaveer00.github.io/website/projects.html
 
-Choose a starting month, an ending month, a starting balance, and a monthly deposit. Then divide your money between US stocks, the Nasdaq 100, bonds, gold, and cash. Your percentages must add up to 100%.
+## What the App Does
 
-Choose a rebalancing rule and a trading cost, then click **Run the experiment**. Rebalancing means buying and selling investments to bring your portfolio back to your chosen percentages.
+The app has two main parts.
 
-The app compares your strategy with holding the same investments without rebalancing and investing only in SPY, an ETF that tracks the S&P 500. You can explore the chart, inspect individual months, and view the trade history. You can also save an experiment or download its results.
+The **historical simulator** shows how a portfolio would have performed during a selected time period. Users choose their investments, monthly deposits, trading costs, and rebalancing rules.
 
-## Main features
+The **paper portfolio monitor** starts a pretend portfolio at current quoted prices. Users can return later to check its value, see how its allocations have changed, and preview the trades needed to restore their original targets.
 
-The app uses real historical prices instead of fictional data. It includes monthly deposits, trading costs, and several rebalancing rules.
+## How to Use It
 
-It shows the final balance, net gain, annualized return, volatility, and maximum drawdown. Volatility describes how much returns fluctuate. Maximum drawdown is the largest fall from an earlier performance peak.
+### Historical Simulator
 
-Another feature tests the same strategy across different starting dates. This helps show whether a strategy performed well across several periods or benefited from a particular starting date.
+1. Choose a starting month and an ending month.
+2. Enter a starting balance and monthly deposit.
+3. Divide the money between stocks, bonds, gold, and cash. The percentages must total 100%.
+4. Choose a rebalancing rule and trading cost.
+5. Click **Run the experiment**.
+6. Explore the charts, performance measurements, and trade history.
+7. Save the experiment or download its results.
 
-## How it works
+Rebalancing means buying and selling investments to restore the chosen percentages. For example, if stocks grow from 60% to 70% of a portfolio, rebalancing brings them back toward 60%.
 
-The frontend uses HTML, CSS, and JavaScript. HTML creates the page, CSS controls its appearance, and JavaScript handles the buttons, forms, and charts.
+The app compares the selected strategy with keeping the same investments without rebalancing and investing entirely in SPY, an ETF that tracks the S&P 500. Each comparison uses the same starting balance and monthly deposits.
 
-When you run an experiment, the frontend sends your settings to a Python backend. The backend calculates how the investments change each month, adds deposits, applies rebalancing rules, and subtracts trading costs. It returns the results to the frontend, which displays them.
+### Paper Portfolio Monitor
 
-The backend uses SQLite to store saved experiment names and settings. Render hosts both the frontend and backend. My portfolio’s Projects page links to the app.
+1. Set the starting balance, investment percentages, and trading cost in the strategy form.
+2. Scroll to **Paper portfolio monitor**.
+3. Enter a name and click **Start paper portfolio at latest prices**.
+4. Return later and select the saved portfolio.
+5. Click **Refresh valuation** to check its value and allocation drift.
+6. Review the rebalancing preview or download the report.
 
-## Historical data and API use
+This section does not use historical dates, monthly deposits, or automatic rebalancing. Its holdings stay fixed. The rebalancing plan is a preview and does not execute trades.
 
-The project uses Yahoo Finance’s chart endpoint to download historical prices for four ETFs:
+The interface adapts to desktop and phone screens.
 
-- SPY represents US large-company stocks.
-- QQQ tracks the Nasdaq 100.
-- AGG represents US bonds.
-- GLD represents gold.
+## Main Features
 
-The downloaded prices are saved in `data/market.json`. Simulations use this saved snapshot instead of downloading prices every time. The current snapshot covers November 2006 through September 2026.
+- Historical strategy simulation using real market prices.
+- Monthly contributions, cash allocations, and trading costs.
+- Quarterly, annual, allocation-drift, and buy-and-hold rules.
+- Comparisons with buy-and-hold and an SPY benchmark.
+- Interactive portfolio-value and drawdown charts.
+- Tests across different historical starting dates.
+- A ledger explaining rebalancing trades.
+- Current-price paper portfolios using a second API.
+- Allocation-drift calculations and fee-aware rebalancing previews.
+- Database saving and downloadable results.
 
-The prices are adjusted for stock splits and distributions. The Yahoo endpoint is unofficial, so it may change or become unavailable.
+## Features I Am Most Proud Of
 
-The frontend also communicates with the project’s own backend API. It requests available dates, submits strategies for calculation, and saves or loads experiments.
+The feature I am most proud of is comparing the same strategy across different starting dates. A strategy might look successful during one period but perform poorly during another. This comparison makes the app more useful because it helps users question whether their results came from their strategy or their timing. I also like the paper portfolio monitor because it connects the historical simulator to current market prices. Users can start a pretend portfolio, return later, and see how its value and investment percentages have changed. The rebalancing preview shows what trades would restore the original allocation and how much those trades would cost.
 
-## Running locally
+## Understanding the Results
 
-You need Python 3.10 or newer. No extra Python packages are required.
+- **Final balance:** the portfolio’s value at the end.
+- **Total deposits:** the starting balance plus monthly contributions.
+- **Net gain:** the final balance minus total deposits.
+- **Annualized return:** a yearly growth measurement that accounts for ongoing deposits.
+- **Volatility:** how much monthly returns fluctuate.
+- **Maximum drawdown:** the largest fall from an earlier performance peak.
+- **Trading costs:** simulated fees paid on purchases and sales.
+- **Allocation drift:** the difference between an investment’s current percentage and its target percentage.
+
+## How the App Works
+
+### Frontend
+
+The frontend runs in the user’s browser.
+
+HTML creates the page structure, CSS controls the appearance, and JavaScript handles user interactions. JavaScript sends settings to the backend and displays the returned results using charts and other interface elements.
+
+### Backend
+
+The backend is written in Python and hosted on Render.
+
+It receives requests from the frontend, validates the inputs, performs calculations, and returns results as JSON. It also requests current prices and manages saved experiments.
+
+The historical engine updates investment values month by month, adds contributions, applies rebalancing rules, and subtracts trading costs.
+
+The paper portfolio engine converts the starting money into fractional shares at quoted prices. Later valuations multiply those saved shares by the latest available prices.
+
+### Database
+
+The app uses SQLite to store historical experiment settings, paper portfolio holdings, and valuation observations.
+
+A random identifier stored in the browser connects saved records to that browser. This is a simple save system rather than a full account or login system.
+
+## API Usage
+
+### Yahoo Finance: Historical Prices
+
+The historical-data script requests adjusted prices from Yahoo Finance’s chart endpoint for:
+
+- **SPY:** US large-company stocks.
+- **QQQ:** the Nasdaq 100.
+- **AGG:** US bonds.
+- **GLD:** gold.
+
+The data is saved in `data/market.json`. Historical simulations use this snapshot instead of downloading prices for every experiment.
+
+The current snapshot covers November 2006 through September 2026. The prices include adjustments for splits and distributions. The endpoint is unofficial and could change or become unavailable.
+
+### Fintable: Current Prices
+
+The paper portfolio monitor requests current quotes from Fintable through the Python backend.
+
+The app shows quote timestamps because prices can be delayed and different investments can have different quote times. A shared 60-second cache reduces repeated requests.
+
+Incomplete or invalid responses produce an error instead of invented prices. New portfolios cannot be created when quotes are more than 96 hours old.
+
+### The App’s Own API
+
+- `/api/health`: checks whether the backend is running.
+- `/api/market`: returns available historical dates and source information.
+- `/api/simulate`: calculates a historical experiment.
+- `/api/experiments`: saves and loads historical experiments.
+- `/api/quotes`: returns validated current prices.
+- `/api/paper`: creates and lists paper portfolios.
+- `/api/paper/value`: values a saved portfolio and records an observation.
+
+## Main Files
+
+- `index.html`: page structure and controls.
+- `style.css`: styling and responsive layout.
+- `app.js`: historical simulator interactions and charts.
+- `paper.js`: paper portfolio interactions and charts.
+- `config.js`: backend address configuration.
+- `backend/app.py`: web server, API routes, and database operations.
+- `backend/engine.py`: historical simulation and performance analysis.
+- `backend/market.py`: historical-price downloads.
+- `backend/paper.py`: current-price requests and paper portfolio calculations.
+- `backend/test_engine.py`: historical calculation tests.
+- `backend/test_paper.py`: paper portfolio tests.
+- `data/market.json`: historical-data snapshot.
+- `prompt_log.md`: actual prompts and development notes.
+
+## Running Locally
+
+Python 3.10 or newer is required. No additional Python packages are needed.
 
 Download the repository and open a terminal inside the `market-time-machine` folder. Run:
 
@@ -52,78 +153,71 @@ Download the repository and open a terminal inside the `market-time-machine` fol
 python3 backend/app.py
 ```
 
-Then open **http://127.0.0.1:8766/** in your browser. Keep the terminal running while using the app. Press Control+C to stop the server.
+Open http://127.0.0.1:8766/ in a browser. Keep the terminal running while using the app. Press Control+C to stop the server.
 
-To refresh the historical data, run this from the project folder with an internet connection:
+To refresh the historical-data snapshot, run:
 
 ```sh
 python3 backend/market.py
 ```
 
-To run the calculation tests:
+This requires an internet connection. The paper portfolio monitor also needs internet access to request current quotes.
+
+To run the tests:
 
 ```sh
 cd backend
 python3 -m unittest -v
 ```
 
-## Secrets and saved experiments
+## Deployment
 
-The tested historical-data endpoint does not require an API key. No API keys are included in the frontend. Database files and `.env` files are excluded from Git, and the backend prevents visitors from downloading its database.
+Render hosts the frontend and Python backend together. The portfolio’s Projects page links to the Render app.
 
-Saved experiments are connected to a random identifier stored in your browser. This is a simple save system rather than a full account system. Clearing browser storage loses access to those experiments.
+The Render settings are:
 
-The app uses Render Free, so saved experiments can disappear after a server restart or deployment. Download results you want to keep. The server may also take time to wake up after inactivity.
+- **Runtime:** Python 3.
+- **Root directory:** `market-time-machine`.
+- **Build command:** `python3 --version`.
+- **Start command:** `HOST=0.0.0.0 python3 backend/app.py`.
+
+## Secrets and Data Handling
+
+The tested Yahoo Finance and Fintable endpoints do not require API keys. No secret keys are stored in the frontend.
+
+Database files and `.env` files are excluded from Git. The backend does not allow visitors to download its database.
+
+Clearing browser storage loses access to that browser’s saved experiments. On Render Free, database records can disappear after a restart or deployment. Users should download important results.
+
+The app uses pretend money and does not connect to brokerage accounts or place real trades.
+
 
 ## Limitations
 
-This app uses pretend money and does not make real trades. Historical results do not predict future performance.
+Historical results do not predict future performance.
 
-The simulation uses monthly data. It does not include taxes, inflation, changes within each month, or every cost involved in real trading. Cash earns no interest.
+The historical simulator uses monthly observations. It does not model every change within a month, taxes, inflation, or every real trading cost. Cash earns no interest.
 
-The different historical test periods overlap, so they are not independent tests. The app also uses ETFs that still exist today, which limits how broadly its results can be interpreted.
+Initial purchase costs reduce the starting balance but are not included in the annualized return measured afterward.
 
-## Testing
+The historical comparison periods overlap, so they are not independent tests. Selecting ETFs that still exist today also limits how broadly the results can be interpreted.
 
-The calculation tests checked investment returns, drawdown, cash deposits, purchase fees, invalid inputs, and whether future prices could change earlier results.
+The paper monitor uses quoted prices that may be delayed. It does not automatically rebalance, add monthly deposits, or adjust saved holdings for future corporate actions such as stock splits.
 
-The deployed app was also checked to confirm that the frontend loaded, simulations worked, and experiments could be saved and loaded. Invalid allocations were rejected, and database downloads were blocked. The layout was checked at a phone-sized width.
+Render Free may take time to wake up after inactivity, and its database storage is not permanent.
 
-## AI use and personal contributions
+## My Personal Contributions and Learning
 
-Codex, a GPT-6-based assistant, helped brainstorm the expanded project and create the initial frontend, Python backend, database functionality, and tests. It also helped debug and verify the app and wrote this README draft.
+I helped shape the project’s direction by asking for a more substantial version of the original Market Time Machine idea. I then requested a second API and a current-price feature to expand the app beyond historical simulations. I also configured the Render web service and initiated its deployment.
 
-Terminal tools were used to run the code and test the backend. Web search was used to check the data source. The Codex in-app browser was used to test the interface.
+Working on this project helped me understand how the frontend, backend, API, and database fit together. The frontend collects inputs and displays results. The Python backend performs calculations and requests prices. The database stores experiments so users can revisit them.
 
-## Sources
+## AI Use
 
-Historical prices came from [Yahoo Finance’s chart endpoint](https://query1.finance.yahoo.com/v8/finance/chart/SPY?range=20y&interval=1mo). Yahoo’s explanation of adjusted prices is available in its [adjusted-close documentation](https://in.help.yahoo.com/kb/adjusted-close-sln28256.html).
+Codex, a GPT-6-based assistant, helped brainstorm the expanded project and generated the initial frontend, Python backend, database functionality, and tests. It also helped debug the app and prepare documentation.
 
+Terminal tools were used to run code and test the backend. Web search checked data-provider documentation. The Codex in-app browser was used to test the interface.
 
-## AI-generated documentation — paper portfolio update
-
-The new paper portfolio monitor lets you test a pretend portfolio starting at current prices. It uses Fintable, a second API, to request prices for SPY, QQQ, AGG, and GLD. These prices are separate from the Yahoo historical data. Quotes can be delayed, so their timestamps and source are shown.
-
-### How to use the new section
-
-Set your starting balance, allocation percentages, and trading fee in the strategy form. Scroll to **Paper portfolio monitor**, enter a name, and click **Start paper portfolio at latest prices**. Historical dates, monthly deposits, and the rebalancing schedule do not apply to this section.
-
-The backend converts your pretend money into fractional shares after purchase costs and saves those holdings in SQLite. Return later, choose the saved portfolio, and click **Refresh valuation**. The app requests the latest available prices and calculates the portfolio's value, gain or loss, and allocation drift. Drift means how far an investment's percentage has moved from your original target.
-
-It also previews the purchases and sales needed to restore your targets, including estimated fees. This is a preview only; it does not change holdings or place real trades. Each fresh price request records a valuation observation, which builds a chart over time. You can download a report to keep a copy.
-
-### How the new code works
-
-`paper.js` controls this section and displays its chart. `backend/paper.py` requests and validates Fintable prices, creates holdings, values them, and calculates the rebalancing preview. `backend/app.py` saves portfolios and observations in the database.
-
-The frontend uses `/api/paper` to create and list portfolios and `/api/paper/value` to value them. `/api/quotes` returns validated current prices. The backend shares a 60-second price cache to reduce repeated requests. No API key was needed for the tested Fintable endpoint.
-
-Incomplete or invalid price responses produce an error instead of invented prices. New portfolios are blocked if quotes are over 96 hours old. Refreshing an existing portfolio does not alter its saved holdings. Saved portfolios and observations can disappear after Render Free restarts, so download important results.
-
-### Testing and AI use
-
-All 12 calculation tests passed, including six new tests for paper holdings, allocation drift, rebalancing costs, all-cash portfolios, invalid allocations, and stale prices. Local API tests checked saving, loading, cache deduplication, and browser ownership isolation. Browser tests checked creating and reopening portfolios and the phone layout.
-
-Codex generated this feature and this documentation. Actual prompts and development notes are in the separate `prompt_log.md`. This does not claim student-authored code contributions. The README still needs Veer's own explanation of his favorite features and actual personal edits before submission.
-
-Current-price source: [Fintable API documentation](https://fintable.io/docs).
+- [Yahoo Finance adjusted-close explanation](https://in.help.yahoo.com/kb/adjusted-close-sln28256.html)
+- [Example Yahoo Finance historical-data endpoint](https://query1.finance.yahoo.com/v8/finance/chart/SPY?range=20y&interval=1mo)
+- [Fintable API documentation](https://fintable.io/docs)
